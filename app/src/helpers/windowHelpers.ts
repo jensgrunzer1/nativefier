@@ -27,18 +27,10 @@ export function adjustWindowZoom(adjustment: number): void {
 export function showNavigationBlockedMessage(
   message: string,
 ): Promise<MessageBoxReturnValue> {
-  return new Promise((resolve, reject) => {
-    withFocusedWindow((focusedWindow) => {
-      dialog
-        .showMessageBox(focusedWindow, {
-          message,
-          type: 'error',
-          title: 'Navigation blocked',
-        })
-        .then((result) => resolve(result))
-        .catch((err) => {
-          reject(err);
-        });
+  return new Promise((resolve) => {
+    resolve({
+      response: 0,
+      checkboxChecked: false,
     });
   });
 }
@@ -288,16 +280,14 @@ function injectCSSIntoResponse(
     !details.webContents
   ) {
     log.debug(
-      `Skipping CSS injection for:\n${details.url}\nwith resourceType ${
-        details.resourceType
+      `Skipping CSS injection for:\n${details.url}\nwith resourceType ${details.resourceType
       } and content-type ${contentType as string}`,
     );
     return Promise.resolve(undefined);
   }
 
   log.debug(
-    `Injecting CSS for:\n${details.url}\nwith resourceType ${
-      details.resourceType
+    `Injecting CSS for:\n${details.url}\nwith resourceType ${details.resourceType
     } and content-type ${contentType as string}`,
   );
   return details.webContents.insertCSS(cssToInject);
